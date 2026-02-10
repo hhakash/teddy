@@ -56,6 +56,20 @@
             100% { transform: translateX(-50%); }
         }
 
+        /* Scattered Background Elements */
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: 1;
+            animation: background-float var(--d) ease-in-out infinite;
+        }
+
+        @keyframes background-float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -30px) rotate(15deg); }
+        }
+
         /* Collectible Bears - ABSOLUTE FRONT */
         .collectible-teddy {
             position: absolute;
@@ -202,13 +216,15 @@
         </div>
     </div>
 
-    <!-- Scavenger HUD (Center Left) -->
+    <!-- Scavenger HUD -->
     <div class="scavenger-hud funky-font text-pink-500">
         🧸 BEARS FOUND: <span id="bear-count">0</span> / 7
     </div>
 
+    <!-- Decoration Layer -->
     <div id="bg-decoration" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
 
+    <!-- Collectibles Layer -->
     <div id="collectibles-layer" class="fixed inset-0 overflow-hidden" style="z-index: 99998; pointer-events: none;"></div>
 
     <main class="w-full h-full flex flex-col items-center justify-around py-16 px-6 relative z-10">
@@ -313,9 +329,10 @@
                 
                 let left, top;
                 const setSafePosition = () => {
-                    left = Math.random() * 75 + 15; 
-                    top = Math.random() * 60 + 20; 
-                    if ((left > 20 && left < 80 && top > 30 && top < 70) || (left < 20)) {
+                    left = Math.random() * 75 + 10; 
+                    top = Math.random() * 70 + 15; 
+                    // Avoid overlapping main UI elements center-screen
+                    if ((left > 20 && left < 80 && top > 30 && top < 70)) {
                         setSafePosition();
                     }
                 };
@@ -354,16 +371,21 @@
 
         function initApp() {
             const decoContainer = document.getElementById('bg-decoration');
+            decoContainer.innerHTML = ''; // Clear any existing
             
-            const icons = ['❤️', '☁️', '🍭', '🍓', '🎀'];
-            for(let i=0; i<8; i++) {
+            const icons = ['❤️', '☁️', '🍭', '🍓', '🎀', '⭐', '🌸'];
+            // Create more scattered elements for full background coverage
+            for(let i=0; i<15; i++) {
                 const el = document.createElement('div');
                 el.className = 'floating-element';
                 el.innerText = icons[Math.floor(Math.random() * icons.length)];
-                el.style.left = Math.random() * 90 + 'vw';
-                el.style.top = Math.random() * 90 + 'vh';
-                el.style.fontSize = (Math.random() * 10 + 15) + 'px';
-                el.style.setProperty('--d', (Math.random() * 5 + 7) + 's');
+                
+                // Random position across entire screen
+                el.style.left = (Math.random() * 95) + 'vw';
+                el.style.top = (Math.random() * 95) + 'vh';
+                
+                el.style.fontSize = (Math.random() * 15 + 15) + 'px';
+                el.style.setProperty('--d', (Math.random() * 5 + 5) + 's');
                 decoContainer.appendChild(el);
             }
 
